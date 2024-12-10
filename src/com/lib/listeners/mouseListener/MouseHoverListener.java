@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 
 public class MouseHoverListener implements MouseListener {
     private final JComponent parent;
-    private final Border originalBorder;
+    private Border originalBorder;
     private boolean mouseInside;
     private final Border HOVER_BORDER = BorderFactory.createLineBorder(Color.BLUE, 3);
 
@@ -32,6 +32,7 @@ public class MouseHoverListener implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
+    	originalBorder = parent.getBorder();
         parent.setBorder(HOVER_BORDER);
         mouseInside = true;
     }

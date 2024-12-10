@@ -15,11 +15,13 @@ public class Values {
 	}
 
 	public static class Colors {
-		public static final Color INPUT_BACKGROUND = new Color(70, 71, 71);
-		public static final Color INPUT_FOREGROUND = Color.WHITE;
+		//public static final Color INPUT_BACKGROUND = new Color(70, 71, 71);
+		public static final Color INPUT_BACKGROUND = Color.WHITE;
+		public static final Color INPUT_FOREGROUND = Color.BLACK;
 	}
 
 	public static class Dimensions {
+		public static final Dimension GET_SETTINGS_SIZE = new Dimension(500, 500);
 		public static final Dimension INPUT_SIZE = new Dimension(200, 50);
 		public static final Dimension BUTTON_SIZE = new Dimension(200, 50);
 	}

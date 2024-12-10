@@ -1,17 +1,25 @@
 package com.main;
 
-import com.lib.comp.NumberInput;
-import com.lib.comp.Label;
-import com.lib.layout.VerticalFlowLayout;
-import com.settings.Settings;
-import com.user.UserManager;
-import com.lib.comp.Button;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
-public class MainGamePanel extends JPanel implements GamePanel {
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+import com.lib.comp.Button;
+import com.lib.comp.Input;
+import com.lib.comp.Label;
+import com.lib.comp.NumberInput;
+import com.lib.layout.VerticalFlowLayout;
+import com.lib.listener.Action;
+import com.lib.listener.ActionExecutor;
+import com.lib.listener.KeyHandler;
+import com.settings.Settings;
+import com.user.UserManager;
+
+public class MainGamePanel extends JPanel implements GamePanel, ActionExecutor {
 
     private final UserManager um;
 
@@ -20,9 +28,13 @@ public class MainGamePanel extends JPanel implements GamePanel {
     private JPanel inputsPanel;
     private Label[] outputs;
     private JPanel outputsPanel;
+    
+    private KeyHandler mainKeyListener;
 
     private Button playBtn;
     private Label mainOutput;
+    private Button returnToSettingsBtn;
+    private JPanel buttonsPanel;
 
     public MainGamePanel () {
 
@@ -33,11 +45,18 @@ public class MainGamePanel extends JPanel implements GamePanel {
 
         um = new UserManager(inputs, outputs);
     }
+    
+    public void returnToSettings (ActionEvent ae) {
+    	Main.setContentPane(new GetSettingsPanel());
+    }
 
     public void play (ActionEvent ae) {
         boolean success = um.play();
-        if (success)
-            mainOutput.setText(um.getNearest()+"");
+        if (!success)
+        	return;
+        
+        mainOutput.setText(um.getNearest()+"");
+        inputs[0].requestFocus();
     }
 
     @Override
@@ -56,6 +75,8 @@ public class MainGamePanel extends JPanel implements GamePanel {
 
         playBtn = new Button("play");
         mainOutput = new Label();
+        returnToSettingsBtn = new Button("back");
+        buttonsPanel = new JPanel();
     }
 
     @Override
@@ -72,11 +93,20 @@ public class MainGamePanel extends JPanel implements GamePanel {
         outputsPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         outputsPanel.setPreferredSize(inputsPanel.getPreferredSize());
         outputsPanel.setLayout(new VerticalFlowLayout());
+        
+        buttonsPanel.setLayout(new VerticalFlowLayout());
+        
+        mainKeyListener = new KeyHandler(this);
+        
+        for (Input i : inputs) {
+        	i.addKeyListener(mainKeyListener);
+        }
     }
 
     @Override
     public void listen() {
         playBtn.addActionListener(this::play);
+        returnToSettingsBtn.addActionListener(this::returnToSettings);
     }
 
     @Override
@@ -90,9 +120,32 @@ public class MainGamePanel extends JPanel implements GamePanel {
             outputsPanel.add(l);
         }
         add(outputsPanel);
-
-        add(playBtn);
+        
         add(mainOutput);
+        
+        buttonsPanel.add(playBtn);
+        buttonsPanel.add(returnToSettingsBtn);
+        
+        add(buttonsPanel);
     }
+
+	@Override
+	public void exec(Action a) {
+		switch (a) {
+		case PLAY:
+			play(null);
+			break;
+			
+		case BACK:
+			returnToSettings(null);
+			break;
+			
+		case RESET:
+			// TODO create reset method
+			break;
+			
+		}
+		
+	}
 
 }

@@ -4,6 +4,6 @@
 /**
  * 
  */
-module numGame.v75 {
+module numGame {
 	requires java.desktop;
 }

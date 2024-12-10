@@ -1,16 +1,19 @@
 package com.main;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import com.lib.comp.Button;
 import com.lib.comp.NumberInput;
 import com.lib.comp.Slider;
 import com.lib.layout.VerticalFlowLayout;
 import com.settings.Settings;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class GetSettingsPanel extends JPanel implements ActionListener, GamePanel, PropertyChangeListener {
     private Button startGameBtn;
@@ -41,6 +44,7 @@ public class GetSettingsPanel extends JPanel implements ActionListener, GamePane
         this.setLayout(new VerticalFlowLayout());
         secretNumInp.setValues(0, Values.Preferences.PREFERRED_MAXIMUM_VALUE, 1);
         usersLenInp.setValues(2, Values.Preferences.MAXIMUM_USERS, 2);
+        setPreferredSize(Values.Dimensions.GET_SETTINGS_SIZE);
     }
 
     @Override
