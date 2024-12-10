@@ -1,5 +1,7 @@
-package com.lib.listeners.keyListener;
+package com.lib.listener;
 
 public enum Action {
-    ENTER
+	PLAY,
+	BACK,
+	RESET
 }

@@ -1,5 +1,5 @@
-package com.lib.listeners.keyListener;
+package com.lib.listener;
 
 public interface ActionExecutor {
-    void exec(Action action);
+	void exec(Action a);
 }

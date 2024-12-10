@@ -1,39 +1,27 @@
 package com.settings;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Properties;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
-public class SettingsStorage {
-    private final String FILE_PATH = "src/com/data/settings.properties";
-    PanelWithProperties mp;
+public class SettingsDisk {
 
-    public SettingsStorage (PanelWithProperties mp) {
-        this.mp = mp;
+    private PanelWithProperties pwp;
+    private final String SETTINGS_PATH = "/src/data/settings.dat";
 
+    public SettingsDisk(PanelWithProperties pwp) {
+        this.pwp = pwp;
     }
 
-    public void writeSettings () {
+    public void loadSettings () {
         try {
-            FileOutputStream fos = new FileOutputStream(FILE_PATH);
-            Properties p = mp.getProperties();
-            p.store(fos, "settings");
-            fos.close();
-        } catch (Exception e) {
-            System.out.println("error while writing settings");
-        }
-    }
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(SETTINGS_PATH));
+            Settings s = (Settings)ois.readObject();
 
-    public void loadProperties () {
-        try {
-            FileInputStream fis = new FileInputStream(FILE_PATH);
-            Properties p = null;
-            p.load(fis);
-            mp.setProperties(p);
-            fis.close();
+
         } catch (Exception e) {
-            System.out.println("Error while loading settings");
-            return;
+             System.out.println(e);
         }
     }
 
