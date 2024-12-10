@@ -4,11 +4,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-public class SettingsStorage {
+public class PropertiesStorage {
     private final String FILE_PATH = "src/com/data/settings.properties";
     PanelWithProperties mp;
 
-    public SettingsStorage (PanelWithProperties mp) {
+    public PropertiesStorage(PanelWithProperties mp) {
         this.mp = mp;
     }
 

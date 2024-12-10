@@ -4,36 +4,35 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.util.Properties;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import com.lib.comp.Button;
 import com.lib.comp.Input;
 import com.lib.comp.Label;
 import com.lib.comp.NumberInput;
 import com.lib.layout.VerticalFlowLayout;
-import com.lib.listener.Action;
-import com.lib.listener.ActionExecutor;
-import com.lib.listener.KeyHandler;
-import com.settings.Settings;
+import com.lib.listeners.keyListener.Action;
+import com.lib.listeners.keyListener.ActionExecutor;
+import com.lib.listeners.keyListener.KeyHandler;
+import com.settings.*;
 import com.user.UserManager;
 
 public class MainGamePanel extends JPanel implements GamePanel, ActionExecutor {
 
-    private final UserManager um;
+    private UserManager um;
+    private Settings settings;
+    private SettingsStorage settingsS;
 
     // gui comp
     private NumberInput[] inputs;
     private JPanel inputsPanel;
     private Label[] outputs;
     private JPanel outputsPanel;
-    
-    private KeyHandler mainKeyListener;
 
-    private Button playBtn;
+    private Button playBtn, returnToSettingsBtn, resetBtn;
     private Label mainOutput;
-    private Button returnToSettingsBtn;
     private JPanel buttonsPanel;
 
     public MainGamePanel () {
@@ -43,10 +42,18 @@ public class MainGamePanel extends JPanel implements GamePanel, ActionExecutor {
         listen();
         addComp();
 
+        initUserMan();
+    }
+
+    private void initUserMan () {
         um = new UserManager(inputs, outputs);
     }
     
     public void returnToSettings (ActionEvent ae) {
+        int ans = JOptionPane.showConfirmDialog(this, "are you sure ?");
+        if (ans!=JOptionPane.YES_OPTION)
+            return;
+
     	Main.setContentPane(new GetSettingsPanel());
     }
 
@@ -77,6 +84,7 @@ public class MainGamePanel extends JPanel implements GamePanel, ActionExecutor {
         mainOutput = new Label();
         returnToSettingsBtn = new Button("back");
         buttonsPanel = new JPanel();
+        resetBtn = new Button("reset all");
     }
 
     @Override
@@ -95,18 +103,18 @@ public class MainGamePanel extends JPanel implements GamePanel, ActionExecutor {
         outputsPanel.setLayout(new VerticalFlowLayout());
         
         buttonsPanel.setLayout(new VerticalFlowLayout());
-        
-        mainKeyListener = new KeyHandler(this);
-        
+
         for (Input i : inputs) {
-        	i.addKeyListener(mainKeyListener);
+        	i.addKeyListener(new KeyHandler(this));
         }
+
     }
 
     @Override
     public void listen() {
         playBtn.addActionListener(this::play);
         returnToSettingsBtn.addActionListener(this::returnToSettings);
+        resetBtn.addActionListener(this::reset);
     }
 
     @Override
@@ -125,8 +133,23 @@ public class MainGamePanel extends JPanel implements GamePanel, ActionExecutor {
         
         buttonsPanel.add(playBtn);
         buttonsPanel.add(returnToSettingsBtn);
+        buttonsPanel.add(resetBtn);
         
         add(buttonsPanel);
+    }
+
+    public void reset (ActionEvent ae) {
+        int ans = JOptionPane.showConfirmDialog(this, "are you sure ?");
+        if (ans!=JOptionPane.YES_OPTION)
+            return;
+
+        for (Input i : inputs)
+            i.setText("");
+        for (Label l : outputs)
+            l.setText("");
+        mainOutput.setText("");
+
+        initUserMan();
     }
 
 	@Override
@@ -141,7 +164,7 @@ public class MainGamePanel extends JPanel implements GamePanel, ActionExecutor {
 			break;
 			
 		case RESET:
-			// TODO create reset method
+            reset(null);
 			break;
 			
 		}
